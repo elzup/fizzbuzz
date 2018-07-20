@@ -1,6 +1,12 @@
 // @flow
-const m = require('.')
+const M = require('.').default
 
 test('snapshot', () => {
-  expect(m('unicorn')).toMatchSnapshot()
+  const m = new M()
+  expect(m.take()).toMatchSnapshot()
+
+  const t = m.it()
+  expect(t.next().value).toMatchSnapshot()
+  expect(t.next().value).toMatchSnapshot()
+  expect(t.next().value).toMatchSnapshot()
 })
