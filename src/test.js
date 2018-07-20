@@ -4,7 +4,7 @@ const M = require('.').default
 test('take', () => {
   const m = new M()
   expect(m.take(3)).toMatchSnapshot('to 3')
-  expect(m.take(10)).toMatchSnapshot('to 10')
+  expect(m.take(30)).toMatchSnapshot('to 30')
   expect(m.take(10, 5)).toMatchSnapshot('to 10 from 5')
 })
 

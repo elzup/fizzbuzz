@@ -23,11 +23,13 @@ function convertComp(rule: Rule): RuleComp {
   }
 }
 
+const basicRules: Rule[] = [{ n: 3, label: 'Fizz' }, { n: 5, label: 'Buzz' }]
+
 class FizzBuzz {
   limit: number
   rules: RuleComp[]
 
-  constructor(limit: number = 1000, rules: Rule[] = []) {
+  constructor(limit: number = 1000, rules: Rule[] = basicRules) {
     this.limit = limit
     this.rules = rules.map(convertComp)
   }
@@ -55,4 +57,5 @@ class FizzBuzz {
   }
 }
 
+export { basicRules }
 export default FizzBuzz
