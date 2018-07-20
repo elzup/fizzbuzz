@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`it: works 1`] = `
+Array [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+]
+`;
+
 exports[`snapshot 1`] = `Array []`;
 
 exports[`snapshot 2`] = `"1"`;
@@ -32,6 +42,40 @@ Array [
   "2",
   "3",
   "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+]
+`;
+
+exports[`take: to 3 1`] = `
+Array [
+  "1",
+  "2",
+  "3",
+]
+`;
+
+exports[`take: to 10 1`] = `
+Array [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+]
+`;
+
+exports[`take: to 10 from 5 1`] = `
+Array [
   "5",
   "6",
   "7",

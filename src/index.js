@@ -32,10 +32,13 @@ class FizzBuzz {
     this.rules = rules.map(convertComp)
   }
 
-  *it(n: number = this.limit): Generator<string, void, string> {
-    let i = 1
+  *it(
+    to: number = this.limit,
+    from: number = 1
+  ): Generator<string, void, string> {
+    let i = from
     const hit = (r: RuleComp) => r.check(i)
-    while (i <= n) {
+    while (i <= to) {
       const hitRules = this.rules.filter(hit)
       if (hitRules.length === 0) {
         yield `${i}`
@@ -46,8 +49,8 @@ class FizzBuzz {
     }
   }
 
-  take(n: number = this.limit): string[] {
-    const it = this.it(n)
+  take(to: number = this.limit, from: number = 1): string[] {
+    const it = this.it(to, from)
     return [...it]
   }
 }
