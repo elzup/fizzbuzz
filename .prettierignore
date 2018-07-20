@@ -3,3 +3,4 @@ lib
 coverage
 .github
 package.json
+.babelrc
