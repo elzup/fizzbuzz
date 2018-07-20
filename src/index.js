@@ -2,12 +2,12 @@
 
 type RuleDiv = {|
   n: number,
-  label: string,
+  name: string,
 |}
 
 type RuleComp = {|
   check: (v: number) => boolean,
-  label: string,
+  name: string,
 |}
 
 type Rule = RuleDiv | RuleComp
@@ -18,24 +18,24 @@ function convertComp(rule: Rule): RuleComp {
   }
   const { n } = rule // @HACKME
   return {
-    label: rule.label,
+    name: rule.name,
     check: v => v % n === 0,
   }
 }
 
-const basicRules: Rule[] = [{ n: 3, label: 'Fizz' }, { n: 5, label: 'Buzz' }]
+const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
 
 class FizzBuzz {
-  limit: number
+  defaultMax: number
   rules: RuleComp[]
 
-  constructor(limit: number = 1000, rules: Rule[] = basicRules) {
-    this.limit = limit
+  constructor(defaultMax: number = 1000, rules: Rule[] = basicRules) {
+    this.defaultMax = defaultMax
     this.rules = rules.map(convertComp)
   }
 
   *it(
-    to: number = this.limit,
+    to: number = this.defaultMax,
     from: number = 1
   ): Generator<string, void, string> {
     let i = from
@@ -45,13 +45,13 @@ class FizzBuzz {
       if (hitRules.length === 0) {
         yield `${i}`
       } else {
-        yield hitRules.map(v => v.label).join('')
+        yield hitRules.map(v => v.name).join('')
       }
       i++
     }
   }
 
-  take(to: number = this.limit, from: number = 1): string[] {
+  take(to: number = this.defaultMax, from: number = 1): string[] {
     const it = this.it(to, from)
     return [...it]
   }

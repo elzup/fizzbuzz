@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`custom func: to 3 1`] = `
+Array [
+  "1",
+  "KYOKO",
+  "3",
+  "KYOKO",
+  "_toshino_",
+  "KYOKO",
+  "7",
+  "KYOKO",
+  "9",
+  "KYOKO",
+]
+`;
+
 exports[`it: works 1`] = `
 Array [
   "1",
