@@ -34,6 +34,10 @@ class FizzBuzz {
     this.rules = rules.map(convertComp)
   }
 
+  addRule(rule: Rule) {
+    this.rules.push(convertComp(rule))
+  }
+
   *it(
     to: number = this.defaultMax,
     from: number = 1

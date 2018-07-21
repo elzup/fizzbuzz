@@ -24,6 +24,12 @@ test('custom func', () => {
   expect(m.take()).toMatchSnapshot('to 3')
 })
 
+test('addRule', () => {
+  const m = new M(10)
+  m.addRule({ name: 'hey', n: 2 })
+  expect(m.take(6)).toMatchSnapshot('with hey')
+})
+
 test('it', () => {
   const m = new M()
   const t = m.it()
