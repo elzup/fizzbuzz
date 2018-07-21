@@ -8,6 +8,14 @@ test('take', () => {
   expect(m.take(10, 5)).toMatchSnapshot('to 10 from 5')
 })
 
+test('at', () => {
+  const m = new M()
+  expect(m.at(3)).toMatchSnapshot('3 fizz')
+  expect(m.at(5)).toMatchSnapshot('5 buzz')
+  expect(m.at(15)).toMatchSnapshot('15 fizzbuzz')
+  expect(m.at(7)).toMatchSnapshot('7')
+})
+
 test('custom func', () => {
   const m = new M(10, [
     { name: 'KYOKO', n: 2 },

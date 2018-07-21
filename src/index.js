@@ -39,16 +39,22 @@ class FizzBuzz {
     from: number = 1
   ): Generator<string, void, string> {
     let i = from
-    const hit = (r: RuleComp) => r.check(i)
     while (i <= to) {
-      const hitRules = this.rules.filter(hit)
-      if (hitRules.length === 0) {
-        yield `${i}`
-      } else {
-        yield hitRules.map(v => v.name).join('')
-      }
+      yield `${this.calc(i)}`
       i++
     }
+  }
+
+  calc(n: number): number | string {
+    const hitRules = this.rules.filter((r: RuleComp) => r.check(n))
+    if (hitRules.length === 0) {
+      return n
+    }
+    return hitRules.map(v => v.name).join('')
+  }
+
+  at(n: number): string {
+    return `${this.calc(n)}`
   }
 
   take(to: number = this.defaultMax, from: number = 1): string[] {
