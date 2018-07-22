@@ -1,5 +1,5 @@
 {
-  "name": "fizzbuzz",
+  "name": "@elzup/fizzbuzz",
   "version": "0.0.0",
   "description": "elzup&#39;s rich fizz buzz",
   "license": "MIT",
