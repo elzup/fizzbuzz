@@ -25,47 +25,50 @@ function convertComp(rule: Rule): RuleComp {
 
 const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
 
-class FizzBuzz {
-  defaultMax: number
-  rules: RuleComp[]
+type FizzBuzz = {
+  max: number,
+  rules: RuleComp[],
+  it: (to?: number, from?: number) => Generator<string, void, string>,
+  at: (n: number) => string,
+  take: (to?: number, from?: number) => string[],
+}
 
-  constructor(defaultMax: number = 1000, rules: Rule[] = basicRules) {
-    this.defaultMax = defaultMax
-    this.rules = rules.map(convertComp)
-  }
-
-  addRule(rule: Rule) {
-    this.rules.push(convertComp(rule))
-  }
-
-  *it(
-    to: number = this.defaultMax,
-    from: number = 1
-  ): Generator<string, void, string> {
-    let i = from
-    while (i <= to) {
-      yield `${this.calc(i)}`
-      i++
-    }
-  }
-
-  calc(n: number): number | string {
-    const hitRules = this.rules.filter((r: RuleComp) => r.check(n))
+function fizzbuzz(max: number = 1000, rulesRaw: Rule[] = basicRules): FizzBuzz {
+  const rules = rulesRaw.map(convertComp)
+  function calc(n: number): number | string {
+    const hitRules = rules.filter((r: RuleComp) => r.check(n))
     if (hitRules.length === 0) {
       return n
     }
     return hitRules.map(v => v.name).join('')
   }
 
-  at(n: number): string {
-    return `${this.calc(n)}`
+  function genIt(
+    to: number = max,
+    from: number = 1
+  ): Generator<string, void, string> {
+    return (function*() {
+      let i = from
+      while (i <= to) {
+        yield `${calc(i)}`
+        i++
+      }
+    })()
   }
 
-  take(to: number = this.defaultMax, from: number = 1): string[] {
-    const it = this.it(to, from)
-    return [...it]
+  return {
+    max,
+    rules,
+    it: genIt,
+    at: (n: number) => {
+      return `${calc(n)}`
+    },
+    take: (to: number = max, from: number = 1) => {
+      const itr = genIt(to, from)
+      return [...itr]
+    },
   }
 }
 
 export { basicRules }
-export default FizzBuzz
+export default fizzbuzz
