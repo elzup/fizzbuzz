@@ -1,5 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`argument: empty 1`] = `
+Array [
+  "1",
+  "2",
+  "Fizz",
+  "4",
+  "Buzz",
+]
+`;
+
+exports[`argument: froms 1`] = `
+Array [
+  "2",
+  "3",
+]
+`;
+
+exports[`argument: num 1`] = `
+Array [
+  "1",
+  "2",
+  "Fizz",
+  "4",
+  "Buzz",
+]
+`;
+
+exports[`argument: overwrite number 1`] = `
+Array [
+  "1",
+  "2",
+]
+`;
+
 exports[`at: 3 fizz 1`] = `"Fizz"`;
 
 exports[`at: 5 buzz 1`] = `"Buzz"`;
