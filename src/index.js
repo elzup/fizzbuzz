@@ -25,16 +25,44 @@ function convertComp(rule: Rule): RuleComp {
 
 const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
 
+type OptionArguments = {|
+  num?: number,
+  from?: number,
+  rules?: Rule[],
+|}
+
+type Arguments = number | OptionArguments
+
+type Params = {
+  num: number,
+  from: number,
+  rules: Rule[],
+}
+
 type FizzBuzz = {
-  max: number,
-  rules: RuleComp[],
   it: (to?: number, from?: number) => Generator<string, void, string>,
   at: (n: number) => string,
   take: (to?: number, from?: number) => string[],
 }
 
-function fizzbuzz(max: number = 1000, rulesRaw: Rule[] = basicRules): FizzBuzz {
-  const rules = rulesRaw.map(convertComp)
+const defaultArgumants: Params = {
+  num: 30,
+  from: 1,
+  rules: basicRules,
+}
+
+function normalizeParams(arg?: Arguments): Params {
+  if (!arg) {
+    return defaultArgumants
+  } else if (typeof arg === 'number') {
+    return { ...defaultArgumants, num: arg }
+  }
+  return { ...defaultArgumants, ...arg }
+}
+
+function fizzbuzz(arg?: Arguments): FizzBuzz {
+  const params = normalizeParams(arg)
+  const rules = params.rules.map(convertComp)
   function calc(n: number): number | string {
     const hitRules = rules.filter((r: RuleComp) => r.check(n))
     if (hitRules.length === 0) {
@@ -44,12 +72,12 @@ function fizzbuzz(max: number = 1000, rulesRaw: Rule[] = basicRules): FizzBuzz {
   }
 
   function genIt(
-    to: number = max,
-    from: number = 1
+    num: number = params.num,
+    from: number = params.from
   ): Generator<string, void, string> {
     return (function*() {
       let i = from
-      while (i <= to) {
+      while (i <= num) {
         yield `${calc(i)}`
         i++
       }
@@ -57,14 +85,12 @@ function fizzbuzz(max: number = 1000, rulesRaw: Rule[] = basicRules): FizzBuzz {
   }
 
   return {
-    max,
-    rules,
     it: genIt,
     at: (n: number) => {
       return `${calc(n)}`
     },
-    take: (to: number = max, from: number = 1) => {
-      const itr = genIt(to, from)
+    take: (num: number = params.num, from: number = params.from) => {
+      const itr = genIt(num, from)
       return [...itr]
     },
   }
