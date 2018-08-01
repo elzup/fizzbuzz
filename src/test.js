@@ -8,6 +8,18 @@ test('take', () => {
   expect(fb.take(10, 5)).toMatchSnapshot('to 10 from 5')
 })
 
+test('chain', () => {
+  const fb = fizzbuzz(10)
+  expect(fb.to(8).take()).toMatchSnapshot('1~8')
+  expect(fb.from(3).take()).toMatchSnapshot('3~10')
+  expect(
+    fb
+      .from(3)
+      .to(8)
+      .take()
+  ).toMatchSnapshot('3~8')
+})
+
 test('at', () => {
   const fb = fizzbuzz()
   expect(fb.at(3)).toMatchSnapshot('3 fizz')

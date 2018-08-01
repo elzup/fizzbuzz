@@ -44,6 +44,8 @@ type FizzBuzz = {
   at: (n: number) => string,
   take: (to?: number, from?: number) => string[],
   addRule: (rule: Rule) => FizzBuzz,
+  from: (num: number) => FizzBuzz,
+  to: (num: number) => FizzBuzz,
 }
 
 const defaultArgumants: Params = {
@@ -96,6 +98,15 @@ function fizzbuzz(arg?: Arguments): FizzBuzz {
     take: (num: number = params.num, from: number = params.from) => {
       const itr = genIt(num, from)
       return [...itr]
+    },
+    from: from => {
+      return fizzbuzz({
+        ...params,
+        from,
+      })
+    },
+    to: num => {
+      return fizzbuzz({ ...params, num })
     },
   }
 }

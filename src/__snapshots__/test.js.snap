@@ -3,11 +3,11 @@
 exports[`addRule: with hey 1`] = `
 Array [
   "1",
-  "2",
+  "hey",
   "Fizz",
-  "4",
+  "hey",
   "Buzz",
-  "Fizz",
+  "Fizzhey",
 ]
 `;
 
@@ -52,6 +52,43 @@ exports[`at: 5 buzz 1`] = `"Buzz"`;
 exports[`at: 7 1`] = `"7"`;
 
 exports[`at: 15 fizzbuzz 1`] = `"FizzBuzz"`;
+
+exports[`chain: 1~8 1`] = `
+Array [
+  "1",
+  "2",
+  "Fizz",
+  "4",
+  "Buzz",
+  "Fizz",
+  "7",
+  "8",
+]
+`;
+
+exports[`chain: 3~8 1`] = `
+Array [
+  "Fizz",
+  "4",
+  "Buzz",
+  "Fizz",
+  "7",
+  "8",
+]
+`;
+
+exports[`chain: 3~10 1`] = `
+Array [
+  "Fizz",
+  "4",
+  "Buzz",
+  "Fizz",
+  "7",
+  "8",
+  "Fizz",
+  "Buzz",
+]
+`;
 
 exports[`custom func: to 3 1`] = `
 Array [
