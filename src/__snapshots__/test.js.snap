@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`addRule: with hey 1`] = `
+Array [
+  "1",
+  "2",
+  "Fizz",
+  "4",
+  "Buzz",
+  "Fizz",
+]
+`;
+
 exports[`argument: empty 1`] = `
 Array [
   "1",

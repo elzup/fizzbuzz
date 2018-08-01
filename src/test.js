@@ -25,11 +25,10 @@ test('argument', () => {
   )
 })
 
-// test('addRule', () => {
-//   const m = fizzbuzz(10)
-//   m.addRule({ name: 'hey', n: 2 })
-//   expect(m.take(6)).toMatchSnapshot('with hey')
-// })
+test('addRule', () => {
+  const fb = fizzbuzz(10).addRule({ name: 'hey', n: 2 })
+  expect(fb.take(6)).toMatchSnapshot('with hey')
+})
 
 test('custom func', () => {
   const fb = fizzbuzz({
