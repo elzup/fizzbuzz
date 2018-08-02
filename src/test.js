@@ -18,6 +18,7 @@ test('chain', () => {
       .to(8)
       .take()
   ).toMatchSnapshot('3~8')
+  expect(fb.rules([{ name: 'test', n: 3 }]).take(5)).toMatchSnapshot('rule')
 })
 
 test('at', () => {

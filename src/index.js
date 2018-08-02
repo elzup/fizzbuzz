@@ -36,7 +36,7 @@ type Arguments = number | OptionArguments
 type Params = {
   num: number,
   from: number,
-  rules: Rule[],
+  rules: RuleComp[],
 }
 
 type FizzBuzz = {
@@ -46,12 +46,13 @@ type FizzBuzz = {
   addRule: (rule: Rule) => FizzBuzz,
   from: (num: number) => FizzBuzz,
   to: (num: number) => FizzBuzz,
+  rules: (rules: Rule[]) => FizzBuzz,
 }
 
-const defaultArgumants: Params = {
+const defaultArgumants = {
   num: 30,
   from: 1,
-  rules: basicRules,
+  rules: basicRules.map(convertComp),
 }
 
 function normalizeParams(arg?: Arguments): Params {
@@ -60,14 +61,18 @@ function normalizeParams(arg?: Arguments): Params {
   } else if (typeof arg === 'number') {
     return { ...defaultArgumants, num: arg }
   }
-  return { ...defaultArgumants, ...arg }
+  const rules = arg.rules ? arg.rules.map(convertComp) : defaultArgumants.rules
+  return {
+    num: arg.num || defaultArgumants.num,
+    from: arg.from || defaultArgumants.from,
+    rules,
+  }
 }
 
 function fizzbuzz(arg?: Arguments): FizzBuzz {
   const params = normalizeParams(arg)
-  const rules = params.rules.map(convertComp)
   function calc(n: number): number | string {
-    const hitRules = rules.filter((r: RuleComp) => r.check(n))
+    const hitRules = params.rules.filter((r: RuleComp) => r.check(n))
     if (hitRules.length === 0) {
       return n
     }
@@ -93,7 +98,8 @@ function fizzbuzz(arg?: Arguments): FizzBuzz {
       return `${calc(n)}`
     },
     addRule: (rule: Rule) => {
-      return fizzbuzz({ ...params, rules: [...rules, rule] })
+      const rules: Rule[] = [...params.rules, rule]
+      return fizzbuzz({ num: params.num, from: params.from, rules })
     },
     take: (num: number = params.num, from: number = params.from) => {
       const itr = genIt(num, from)
@@ -101,12 +107,16 @@ function fizzbuzz(arg?: Arguments): FizzBuzz {
     },
     from: from => {
       return fizzbuzz({
-        ...params,
+        num: params.num,
+        rules: [...params.rules],
         from,
       })
     },
     to: num => {
-      return fizzbuzz({ ...params, num })
+      return fizzbuzz({ from: params.from, rules: [...params.rules], num })
+    },
+    rules: rules => {
+      return fizzbuzz({ from: params.from, num: params.num, rules })
     },
   }
 }

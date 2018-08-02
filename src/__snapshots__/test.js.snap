@@ -90,6 +90,16 @@ Array [
 ]
 `;
 
+exports[`chain: rule 1`] = `
+Array [
+  "1",
+  "2",
+  "test",
+  "4",
+  "5",
+]
+`;
+
 exports[`custom func: to 3 1`] = `
 Array [
   "1",
