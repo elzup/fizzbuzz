@@ -41,16 +41,17 @@
     "@babel/preset-env": "^7.0.0-beta.54",
     "@babel/preset-flow": "^7.0.0-beta.54",
     "all-contributors-cli": "^5.3.0",
-    "babel-core": "^7.0.0-0",
-    "babel-jest": "^23.0.1",
+    "babel-jest": "^23.4.0",
     "eslint": "^5.1.0",
     "eslint-config-precure": "^2.7.0",
-    "flow-bin": "^0.76.0",
+    "flow-bin": "^0.77.0",
     "flow-copy-source": "^2.0.0",
     "husky": "^0.14.3",
-    "jest": "^23.4.1",
+    "jest": "^23.4.2",
     "lint-staged": "^7.2.0",
-    "prettier": "^1.13.7"
+    "prettier": "^1.14.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "babel-core": "7.0.0-bridge.0"
+  }
 }
