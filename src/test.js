@@ -31,9 +31,9 @@ test('at', () => {
 
 test('argument', () => {
   expect(fizzbuzz().take(5)).toMatchSnapshot('empty')
-  expect(fizzbuzz(5).take()).toMatchSnapshot('num')
+  expect(fizzbuzz(5).take()).toMatchSnapshot('to')
   expect(fizzbuzz(5).take(2)).toMatchSnapshot('overwrite number')
-  expect(fizzbuzz({ num: 3, from: 2, rules: [] }).take()).toMatchSnapshot(
+  expect(fizzbuzz({ to: 3, from: 2, rules: [] }).take()).toMatchSnapshot(
     'froms'
   )
 })

@@ -1,123 +1,103 @@
 // @flow
 
 type RuleDiv = {|
-  n: number,
-  name: string,
+  +n: number,
+  +name: string,
 |}
 
+type CheckFunc = (v: number) => boolean
+
 type RuleComp = {|
-  check: (v: number) => boolean,
-  name: string,
+  +check: CheckFunc,
+  +name: string,
 |}
 
 type Rule = RuleDiv | RuleComp
 
-function convertComp(rule: Rule): RuleComp {
-  if (rule.check) {
-    return rule
-  }
-  const { n } = rule // @HACKME
-  return {
-    name: rule.name,
-    check: v => v % n === 0,
-  }
-}
-
-const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
-
 type OptionArguments = {|
-  num?: number,
+  to?: number,
   from?: number,
   rules?: Rule[],
 |}
 
+type Params = {|
+  +to: number,
+  +from: number,
+  +rules: Rule[],
+|}
+
 type Arguments = number | OptionArguments
 
-type Params = {
-  num: number,
-  from: number,
-  rules: RuleComp[],
-}
-
-type FizzBuzz = {
-  it: (to?: number, from?: number) => Generator<string, void, string>,
-  at: (n: number) => string,
-  take: (to?: number, from?: number) => string[],
-  addRule: (rule: Rule) => FizzBuzz,
-  from: (num: number) => FizzBuzz,
-  to: (num: number) => FizzBuzz,
+type FizzBuzz = {|
+  from: (to: number) => FizzBuzz,
+  to: (to: number) => FizzBuzz,
   rules: (rules: Rule[]) => FizzBuzz,
-}
+  addRule: (rule: Rule) => FizzBuzz,
+  take: (to?: number, from?: number) => string[],
+  at: (n: number) => string,
+  it: (to?: number, from?: number) => Generator<string, void, string>,
+|}
+
+const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
 
 const defaultArgumants = {
-  num: 30,
+  to: 30,
   from: 1,
-  rules: basicRules.map(convertComp),
+  rules: basicRules,
 }
 
-function normalizeParams(arg?: Arguments): Params {
+const normalizeParams = (arg?: Arguments): Params => {
   if (!arg) {
     return defaultArgumants
   } else if (typeof arg === 'number') {
-    return { ...defaultArgumants, num: arg }
+    return { ...defaultArgumants, to: arg }
   }
-  const rules = arg.rules ? arg.rules.map(convertComp) : defaultArgumants.rules
   return {
-    num: arg.num || defaultArgumants.num,
-    from: arg.from || defaultArgumants.from,
-    rules,
+    ...defaultArgumants,
+    ...arg,
+  }
+}
+
+const makeDiv = (n: number): CheckFunc => v => v % n === 0
+const convertComp = (rule: Rule): RuleComp => {
+  if (rule.check) {
+    return rule
+  }
+  return {
+    name: rule.name,
+    check: makeDiv(rule.n),
   }
 }
 
 function fizzbuzz(arg?: Arguments): FizzBuzz {
   const params = normalizeParams(arg)
-  function calc(n: number): number | string {
-    const hitRules = params.rules.filter((r: RuleComp) => r.check(n))
+  const compRules = params.rules.map(convertComp)
+  const calc = (n: number): number | string => {
+    const hitRules = compRules.filter(r => r.check(n))
     if (hitRules.length === 0) {
       return n
     }
     return hitRules.map(v => v.name).join('')
   }
 
-  function genIt(
-    num: number = params.num,
+  const genIt = (
+    to: number = params.to,
     from: number = params.from
-  ): Generator<string, void, string> {
-    return (function*() {
-      let i = from
-      while (i <= num) {
+  ): Generator<string, void, string> =>
+    (function*() {
+      for (let i = from; i <= to; i++) {
         yield `${calc(i)}`
-        i++
       }
     })()
-  }
 
   return {
+    from: from => fizzbuzz({ ...params, from }),
+    to: to => fizzbuzz({ ...params, to }),
+    rules: rules => fizzbuzz({ ...params, rules }),
+    addRule: rule => fizzbuzz({ ...params, rules: [...params.rules, rule] }),
+    take: (to = params.to, from = params.from) => [...genIt(to, from)],
+    at: n => `${calc(n)}`,
     it: genIt,
-    at: (n: number) => {
-      return `${calc(n)}`
-    },
-    addRule: (rule: Rule) => {
-      const rules: Rule[] = [...params.rules, rule]
-      return fizzbuzz({ num: params.num, from: params.from, rules })
-    },
-    take: (num: number = params.num, from: number = params.from) => {
-      const itr = genIt(num, from)
-      return [...itr]
-    },
-    from: from => {
-      return fizzbuzz({
-        num: params.num,
-        rules: [...params.rules],
-        from,
-      })
-    },
-    to: num => {
-      return fizzbuzz({ from: params.from, rules: [...params.rules], num })
-    },
-    rules: rules => {
-      return fizzbuzz({ from: params.from, num: params.num, rules })
-    },
   }
 }
 

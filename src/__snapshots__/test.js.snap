@@ -28,20 +28,20 @@ Array [
 ]
 `;
 
-exports[`argument: num 1`] = `
+exports[`argument: overwrite number 1`] = `
+Array [
+  "1",
+  "2",
+]
+`;
+
+exports[`argument: to 1`] = `
 Array [
   "1",
   "2",
   "Fizz",
   "4",
   "Buzz",
-]
-`;
-
-exports[`argument: overwrite number 1`] = `
-Array [
-  "1",
-  "2",
 ]
 `;
 
