@@ -18,12 +18,14 @@ type OptionArguments = {|
   to?: number,
   from?: number,
   rules?: Rule[],
+  rawCallback?: (v: number) => any,
 |}
 
 type Params = {|
   +to: number,
   +from: number,
   +rules: Rule[],
+  +rawCallback: (v: number) => any,
 |}
 
 type Arguments = number | OptionArguments
@@ -40,9 +42,10 @@ type FizzBuzz = {|
 
 const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
 
-const defaultArgumants = {
+const defaultArgumants: Params = {
   to: 30,
   from: 1,
+  rawCallback: v => `${v}`,
   rules: basicRules,
 }
 
@@ -72,10 +75,10 @@ const convertComp = (rule: Rule): RuleComp => {
 function fizzbuzz(arg?: Arguments): FizzBuzz {
   const params = normalizeParams(arg)
   const compRules = params.rules.map(convertComp)
-  const calc = (n: number): number | string => {
+  const calc = (n: number): string | any => {
     const hitRules = compRules.filter(r => r.check(n))
     if (hitRules.length === 0) {
-      return n
+      return params.rawCallback(n)
     }
     return hitRules.map(v => v.name).join('')
   }

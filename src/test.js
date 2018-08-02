@@ -202,3 +202,16 @@ Array [
 `
   )
 })
+
+test('custom no match', () => {
+  const m = fizzbuzz({ rawCallback: () => 0 })
+  expect(m.take(5)).toMatchInlineSnapshot(`
+Array [
+  "0",
+  "0",
+  "Fizz",
+  "0",
+  "Buzz",
+]
+`)
+})
