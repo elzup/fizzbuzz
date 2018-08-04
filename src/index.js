@@ -14,45 +14,43 @@ type RuleComp = {|
 
 type Rule = RuleDiv | RuleComp
 
-type OptionArguments = {|
+type OptionArguments<T> = {|
   to?: number,
   from?: number,
   rules?: Rule[],
-  rawCallback?: (v: number) => any,
+  rawCallback?: (v: number) => T,
 |}
 
-type Params = {|
+type Params<T> = {|
   +to: number,
   +from: number,
   +rules: Rule[],
-  +rawCallback: (v: number) => any,
+  +rawCallback: (v: number) => T,
 |}
 
-type Arguments = number | OptionArguments
+type Arguments<T> = number | OptionArguments<T>
 
-type FizzBuzz = {|
-  from: (to: number) => FizzBuzz,
-  to: (to: number) => FizzBuzz,
-  rules: (rules: Rule[]) => FizzBuzz,
-  addRule: (rule: Rule) => FizzBuzz,
-  take: (to?: number, from?: number) => string[],
-  at: (n: number) => string,
-  it: (to?: number, from?: number) => Generator<string, void, string>,
+type FizzBuzz<T> = {|
+  from: (to: number) => FizzBuzz<T>,
+  to: (to: number) => FizzBuzz<T>,
+  rules: (rules: Rule[]) => FizzBuzz<T>,
+  addRule: (rule: Rule) => FizzBuzz<T>,
+  take: (to?: number, from?: number) => Array<string | T>,
+  at: (n: number) => string | T,
+  it: (to?: number, from?: number) => Generator<string, void, T>,
 |}
 
 const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
 
-const defaultArgumants: Params = {
+const defaultArgumants: Params<string> = {
   to: 30,
   from: 1,
   rawCallback: v => `${v}`,
   rules: basicRules,
 }
 
-const normalizeParams = (arg?: Arguments): Params => {
-  if (!arg) {
-    return defaultArgumants
-  } else if (typeof arg === 'number') {
+const normalizeParams = <T>(arg: Arguments<T>): Params<T> => {
+  if (typeof arg === 'number') {
     return { ...defaultArgumants, to: arg }
   }
   return {
@@ -72,10 +70,10 @@ const convertComp = (rule: Rule): RuleComp => {
   }
 }
 
-function fizzbuzz(arg?: Arguments): FizzBuzz {
-  const params = normalizeParams(arg)
+function fizzbuzz<T: string>(arg?: Arguments<T>): FizzBuzz<T> {
+  const params: Params<T> = arg ? defaultArgumants : normalizeParams(arg)
   const compRules = params.rules.map(convertComp)
-  const calc = (n: number): string | any => {
+  const calc = (n: number): string | T => {
     const hitRules = compRules.filter(r => r.check(n))
     if (hitRules.length === 0) {
       return params.rawCallback(n)
@@ -86,10 +84,10 @@ function fizzbuzz(arg?: Arguments): FizzBuzz {
   const genIt = (
     to: number = params.to,
     from: number = params.from
-  ): Generator<string, void, string> =>
+  ): Generator<string, void, T> =>
     (function*() {
       for (let i = from; i <= to; i++) {
-        yield `${calc(i)}`
+        yield calc(i)
       }
     })()
 

@@ -694,6 +694,12 @@ interface JestExpectType {
    * This ensures that an Object matches the most recent snapshot.
    */
   toMatchSnapshot(name: string): void,
+  /* original */
+  toMatchInlineSnapshot(propertyMatchers?: {[key: string]: JestAsymmetricEqualityType}, name?: string): void,
+  /**
+   * This ensures that an Object matches the most recent snapshot.
+   */
+  toMatchInlineSnapshot(name: string): void,
   /**
    * Use .toThrow to test that a function throws when it is called.
    * If you want to test that a specific error gets thrown, you can provide an
