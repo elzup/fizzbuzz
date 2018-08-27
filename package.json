@@ -1,11 +1,12 @@
 {
   "name": "@elzup/fizzbuzz",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "elzup&#39;s rich fizz buzz",
+  "author": "elzup <guild0105@gmail.com> (elzup.com)",
+  "access": "public",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": "elzup/fizzbuzz",
-  "author": "elzup <guild0105@gmail.com> (elzup.com)",
   "engines": {
     "node": ">=8"
   },
