@@ -14,44 +14,48 @@ type RuleComp = {|
 
 type Rule = RuleDiv | RuleComp
 
-type OptionArguments<T> = {|
+type OptionArguments = {|
   to?: number,
   from?: number,
   rules?: Rule[],
-  rawCallback?: (v: number) => T,
 |}
 
-type Params<T> = {|
+type Params = {|
   +to: number,
   +from: number,
   +rules: Rule[],
-  +rawCallback: (v: number) => T,
 |}
 
-type Arguments<T> = number | OptionArguments<T>
+type Arguments = number | OptionArguments
 
-type FizzBuzz<T> = {|
-  from: (to: number) => FizzBuzz<T>,
-  to: (to: number) => FizzBuzz<T>,
-  rules: (rules: Rule[]) => FizzBuzz<T>,
-  addRule: (rule: Rule) => FizzBuzz<T>,
-  take: (to?: number, from?: number) => Array<string | T>,
-  at: (n: number) => string | T,
-  it: (to?: number, from?: number) => Generator<string, void, T>,
+type FizzBuzz = {|
+  from: (to: number) => FizzBuzz,
+  to: (to: number) => FizzBuzz,
+  rules: (rules: Rule[]) => FizzBuzz,
+  addRule: (rule: Rule) => FizzBuzz,
+  take: (to?: number, from?: number) => Array<string>,
+  at: (n: number) => string,
+  it: (to?: number, from?: number) => Generator<string, void, string>,
 |}
 
 const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
 
-const defaultArgumants: Params<string> = {
+const defaultArgumants: Params = {
   to: 30,
   from: 1,
-  rawCallback: v => `${v}`,
   rules: basicRules,
 }
 
-const normalizeParams = <T>(arg: Arguments<T>): Params<T> => {
+const normalizeParams = (arg?: Arguments): Params => {
+  if (!arg) {
+    return defaultArgumants
+  }
   if (typeof arg === 'number') {
-    return { ...defaultArgumants, to: arg }
+    return {
+      from: defaultArgumants.from,
+      rules: defaultArgumants.rules,
+      to: arg,
+    }
   }
   return {
     ...defaultArgumants,
@@ -70,13 +74,13 @@ const convertComp = (rule: Rule): RuleComp => {
   }
 }
 
-function fizzbuzz<T: string>(arg?: Arguments<T>): FizzBuzz<T> {
-  const params: Params<T> = arg ? defaultArgumants : normalizeParams(arg)
+function fizzbuzz(arg?: Arguments): FizzBuzz {
+  const params = normalizeParams(arg)
   const compRules = params.rules.map(convertComp)
-  const calc = (n: number): string | T => {
+  const calc = (n: number): string => {
     const hitRules = compRules.filter(r => r.check(n))
     if (hitRules.length === 0) {
-      return params.rawCallback(n)
+      return `${n}`
     }
     return hitRules.map(v => v.name).join('')
   }
@@ -84,7 +88,7 @@ function fizzbuzz<T: string>(arg?: Arguments<T>): FizzBuzz<T> {
   const genIt = (
     to: number = params.to,
     from: number = params.from
-  ): Generator<string, void, T> =>
+  ): Generator<string, void, string> =>
     (function*() {
       for (let i = from; i <= to; i++) {
         yield calc(i)
@@ -97,7 +101,7 @@ function fizzbuzz<T: string>(arg?: Arguments<T>): FizzBuzz<T> {
     rules: rules => fizzbuzz({ ...params, rules }),
     addRule: rule => fizzbuzz({ ...params, rules: [...params.rules, rule] }),
     take: (to = params.to, from = params.from) => [...genIt(to, from)],
-    at: n => `${calc(n)}`,
+    at: n => calc(n),
     it: genIt,
   }
 }
