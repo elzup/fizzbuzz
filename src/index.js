@@ -28,14 +28,18 @@ type Params = {|
 
 type Arguments = number | OptionArguments
 
+type MakeIterator = (
+  to?: number,
+  from?: number
+) => Generator<string, void, string>
 type FizzBuzz = {|
   from: (to: number) => FizzBuzz,
   to: (to: number) => FizzBuzz,
   rules: (rules: Rule[]) => FizzBuzz,
   addRule: (rule: Rule) => FizzBuzz,
-  take: (to?: number, from?: number) => Array<string>,
+  take: (to?: number, from?: number) => string[],
   at: (n: number) => string,
-  it: (to?: number, from?: number) => Generator<string, void, string>,
+  it: MakeIterator,
 |}
 
 const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
@@ -74,26 +78,39 @@ const convertComp = (rule: Rule): RuleComp => {
   }
 }
 
-function fizzbuzz(arg?: Arguments): FizzBuzz {
-  const params = normalizeParams(arg)
-  const compRules = params.rules.map(convertComp)
-  const calc = (n: number): string => {
+type CalcFunc = (n: number) => string
+
+const genAt = (compRules: RuleComp[]): CalcFunc => {
+  return (n: number) => {
     const hitRules = compRules.filter(r => r.check(n))
     if (hitRules.length === 0) {
       return `${n}`
     }
     return hitRules.map(v => v.name).join('')
   }
+}
 
-  const genIt = (
-    to: number = params.to,
-    from: number = params.from
+const genGenIt = (
+  calc: CalcFunc,
+  defaultTo: number,
+  defaultFrom: number
+): MakeIterator => {
+  return (
+    to: number = defaultTo,
+    from: number = defaultFrom
   ): Generator<string, void, string> =>
     (function*() {
       for (let i = from; i <= to; i++) {
         yield calc(i)
       }
     })()
+}
+
+const fizzbuzz = (arg?: Arguments): FizzBuzz => {
+  const params = normalizeParams(arg)
+  const compRules = params.rules.map(convertComp)
+  const at = genAt(compRules)
+  const genIt = genGenIt(at, params.to, params.from)
 
   return {
     from: from => fizzbuzz({ ...params, from }),
@@ -101,7 +118,7 @@ function fizzbuzz(arg?: Arguments): FizzBuzz {
     rules: rules => fizzbuzz({ ...params, rules }),
     addRule: rule => fizzbuzz({ ...params, rules: [...params.rules, rule] }),
     take: (to = params.to, from = params.from) => [...genIt(to, from)],
-    at: n => calc(n),
+    at,
     it: genIt,
   }
 }
