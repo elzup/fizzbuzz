@@ -15,34 +15,44 @@ $ npm install @elzup/fizzbuzz
 ## Usage
 
 ```js
-const FizzBuzz = require('fizzbuzz')
-const fb = new FizzBuzz(30)
+const fizzbuzz = require('fizzbuzz')
+const fb = fizzbuzz()
 fb.take(5)
+// [ '1', '2', 'Fizz', '4', 'Buzz' ]
 
-//=> Array [ "1", "2", "Fizz", "4", "Buzz" ]
+fb.from(3)
+  .to(10)
+  .take()
+// [ 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz' ]
 
-fb.at(15)
-//=> "FizzBuzz"
+const t = fb.it()
+t.next().value
+// '1'
+t.next().value
+// '2'
+
+fb.rules([{ name: 'test', n: 3 }]).take(5)
+// [ '1', '2', 'test', '4', '5' ]
+
+fb.addRule({ name: 'hey', n: 2 }).take(6)
+// [ '1', 'hey', 'Fizz', 'hey', 'Buzz', 'Fizzhey' ]
 ```
 
 ## API
 
-### `fizzbuzz(input, [options])`
+### `fizzbuzz = (arg?: Arguments) => FizzBuzz`
 
-#### input
-
-Type: `string`
-
-Lorem ipsum.
-
-#### options
-
-##### foo
-
-Type: `boolean`<br>
-Default: `false`
-
-Lorem ipsum.
+```js
+type FizzBuzz = {|
+  from: (to: number) => FizzBuzz,
+  to: (to: number) => FizzBuzz,
+  rules: (rules: Rule[]) => FizzBuzz,
+  addRule: (rule: Rule) => FizzBuzz,
+  take: (to?: number, from?: number) => string[],
+  at: (n: number) => string,
+  it: MakeIterator,
+|}
+```
 
 ## License
 
@@ -60,3 +70,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
+
+```
+
+```
