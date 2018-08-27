@@ -12,4 +12,4 @@ notifications:
   email: false
 
 script:
-  - yarn run test:ci
+  - yarn run test
