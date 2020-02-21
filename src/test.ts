@@ -1,27 +1,27 @@
-const fizzbuzz = require('.').default
+import fizzbuzz from '.'
 
 test('take', () => {
   const fb = fizzbuzz()
 
   expect(fb.take(15)).toMatchInlineSnapshot(`
-Array [
-  "1",
-  "2",
-  "Fizz",
-  "4",
-  "Buzz",
-  "Fizz",
-  "7",
-  "8",
-  "Fizz",
-  "Buzz",
-  "11",
-  "Fizz",
-  "13",
-  "14",
-  "FizzBuzz",
-]
-`)
+    Array [
+      "1",
+      "2",
+      "Fizz",
+      "4",
+      "Buzz",
+      "Fizz",
+      "7",
+      "8",
+      "Fizz",
+      "Buzz",
+      "11",
+      "Fizz",
+      "13",
+      "14",
+      "FizzBuzz",
+    ]
+  `)
   expect(fb.take(10, 5)).toMatchInlineSnapshot(`
 Array [
   "Buzz",
@@ -163,7 +163,7 @@ test('custom func', () => {
   const fb = fizzbuzz({
     rules: [
       { name: 'KYOKO', n: 2 },
-      { name: '_toshino_', check: (v: number) => v === 5 },
+      { name: '_toshino_', check: v => v === 5 },
     ],
   })
 
@@ -206,4 +206,16 @@ Array [
 ]
 `
   )
+  const t10 = m.it(10, 5)
+
+  expect([...t10]).toMatchInlineSnapshot(`
+Array [
+  "Buzz",
+  "Fizz",
+  "7",
+  "8",
+  "Fizz",
+  "Buzz",
+]
+`)
 })

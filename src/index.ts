@@ -11,7 +11,6 @@ type RuleComp = {
 }
 
 type Rule = RuleDiv | RuleComp
-const isRuleDiv = (rule: Rule): rule is RuleDiv => 'n' in rule
 
 type OptionArguments = {
   to?: number
@@ -53,28 +52,19 @@ const defaultArgumants: Params = {
 }
 
 const normalizeParams = (arg?: Arguments): Params => {
-  if (!arg) {
-    return defaultArgumants
-  }
+  if (!arg) return defaultArgumants
   if (typeof arg === 'number') {
-    return {
-      from: defaultArgumants.from,
-      rules: defaultArgumants.rules,
-      to: arg,
-    }
+    return Object.assign({}, defaultArgumants, { to: arg })
   }
-  return {
-    ...defaultArgumants,
-    ...arg,
-  }
+  return Object.assign({}, defaultArgumants, arg)
 }
 
-const makeDiv = (n: number): CheckFunc => v => v % n === 0
+const isRuleDiv = (rule: Rule): rule is RuleDiv => 'n' in rule
 const convertComp = (rule: Rule): RuleComp => {
   if (!isRuleDiv(rule)) return rule
   return {
     name: rule.name,
-    check: makeDiv(rule.n),
+    check: v => v % rule.n === 0,
   }
 }
 
