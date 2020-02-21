@@ -11,17 +11,18 @@ type RuleComp = {
 }
 
 type Rule = RuleDiv | RuleComp
+const isRuleDiv = (rule: Rule): rule is RuleDiv => 'n' in rule
 
 type OptionArguments = {
   to?: number
   from?: number
-  rules?: Array<Rule>
+  rules?: Rule[]
 }
 
 type Params = {
   readonly to: number
   readonly from: number
-  readonly rules: Array<Rule>
+  readonly rules: Rule[]
 }
 
 type Arguments = number | OptionArguments
@@ -33,14 +34,14 @@ type MakeIterator = (
 type FizzBuzz = {
   from: (to: number) => FizzBuzz
   to: (to: number) => FizzBuzz
-  rules: (rules: Array<Rule>) => FizzBuzz
+  rules: (rules: Rule[]) => FizzBuzz
   addRule: (rule: Rule) => FizzBuzz
-  take: (to?: number, from?: number) => Array<string>
+  take: (to?: number, from?: number) => string[]
   at: (n: number) => string
   it: MakeIterator
 }
 
-const basicRules: Array<Rule> = [
+const basicRules: Rule[] = [
   { n: 3, name: 'Fizz' },
   { n: 5, name: 'Buzz' },
 ]
@@ -70,9 +71,7 @@ const normalizeParams = (arg?: Arguments): Params => {
 
 const makeDiv = (n: number): CheckFunc => v => v % n === 0
 const convertComp = (rule: Rule): RuleComp => {
-  if (rule.check) {
-    return rule
-  }
+  if (!isRuleDiv(rule)) return rule
   return {
     name: rule.name,
     check: makeDiv(rule.n),
@@ -81,9 +80,10 @@ const convertComp = (rule: Rule): RuleComp => {
 
 type CalcFunc = (n: number) => string
 
-const genAt = (compRules: Array<RuleComp>): CalcFunc => {
+const genAt = (compRules: RuleComp[]): CalcFunc => {
   return (n: number) => {
     const hitRules = compRules.filter(r => r.check(n))
+
     if (hitRules.length === 0) {
       return `${n}`
     }
