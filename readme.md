@@ -43,7 +43,7 @@ fb.addRule({ name: 'hey', n: 2 }).take(6)
 ### `fizzbuzz = (arg?: Arguments) => FizzBuzz`
 
 ```js
-type FizzBuzz = {|
+type FizzBuzz = {
   from: (to: number) => FizzBuzz,
   to: (to: number) => FizzBuzz,
   rules: (rules: Rule[]) => FizzBuzz,
@@ -51,7 +51,7 @@ type FizzBuzz = {|
   take: (to?: number, from?: number) => string[],
   at: (n: number) => string,
   it: MakeIterator,
-|}
+}
 ```
 
 ## License

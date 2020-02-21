@@ -1,4 +1,3 @@
-// @flow
 const fizzbuzz = require('.').default
 
 test('take', () => {

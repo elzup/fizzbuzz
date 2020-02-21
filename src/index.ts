@@ -1,30 +1,28 @@
-// @flow
-
-type RuleDiv = {|
-  +n: number,
-  +name: string,
-|}
+type RuleDiv = {
+  readonly n: number
+  readonly name: string
+}
 
 type CheckFunc = (v: number) => boolean
 
-type RuleComp = {|
-  +check: CheckFunc,
-  +name: string,
-|}
+type RuleComp = {
+  readonly check: CheckFunc
+  readonly name: string
+}
 
 type Rule = RuleDiv | RuleComp
 
-type OptionArguments = {|
-  to?: number,
-  from?: number,
-  rules?: Rule[],
-|}
+type OptionArguments = {
+  to?: number
+  from?: number
+  rules?: Array<Rule>
+}
 
-type Params = {|
-  +to: number,
-  +from: number,
-  +rules: Rule[],
-|}
+type Params = {
+  readonly to: number
+  readonly from: number
+  readonly rules: Array<Rule>
+}
 
 type Arguments = number | OptionArguments
 
@@ -32,17 +30,20 @@ type MakeIterator = (
   to?: number,
   from?: number
 ) => Generator<string, void, string>
-type FizzBuzz = {|
-  from: (to: number) => FizzBuzz,
-  to: (to: number) => FizzBuzz,
-  rules: (rules: Rule[]) => FizzBuzz,
-  addRule: (rule: Rule) => FizzBuzz,
-  take: (to?: number, from?: number) => string[],
-  at: (n: number) => string,
-  it: MakeIterator,
-|}
+type FizzBuzz = {
+  from: (to: number) => FizzBuzz
+  to: (to: number) => FizzBuzz
+  rules: (rules: Array<Rule>) => FizzBuzz
+  addRule: (rule: Rule) => FizzBuzz
+  take: (to?: number, from?: number) => Array<string>
+  at: (n: number) => string
+  it: MakeIterator
+}
 
-const basicRules: Rule[] = [{ n: 3, name: 'Fizz' }, { n: 5, name: 'Buzz' }]
+const basicRules: Array<Rule> = [
+  { n: 3, name: 'Fizz' },
+  { n: 5, name: 'Buzz' },
+]
 
 const defaultArgumants: Params = {
   to: 30,
@@ -80,7 +81,7 @@ const convertComp = (rule: Rule): RuleComp => {
 
 type CalcFunc = (n: number) => string
 
-const genAt = (compRules: RuleComp[]): CalcFunc => {
+const genAt = (compRules: Array<RuleComp>): CalcFunc => {
   return (n: number) => {
     const hitRules = compRules.filter(r => r.check(n))
     if (hitRules.length === 0) {
