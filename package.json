@@ -1,6 +1,6 @@
 {
   "name": "@elzup/fizzbuzz",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "elzup&#39;s rich fizz buzz",
   "author": "elzup <guild0105@gmail.com> (elzup.com)",
   "access": "public",
@@ -8,21 +8,22 @@
   "main": "dist/index.js",
   "repository": "elzup/fizzbuzz",
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "scripts": {
-    "build": "babel src --out-dir dist && npm run prepack:flow",
+    "build": "",
     "deploy": "npm run build && yarn publish",
-    "prepack:flow": "flow-copy-source src dist",
-    "precommit": "yarn flow && lint-staged",
-    "fmt": "prettier --write '**/*.{js,json,md}'",
-    "lint": "eslint .",
+    "lint": "eslint --ext .ts,.tsx",
     "test": "jest src",
-    "test:cov": "jest src --coverage --ci --runInBand",
+    "test:cov": "jest src --coverage --ci --runInBand"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
-    "*.{js,json,md}": [
-      "prettier --write",
+    "*.{ts,json,md}": [
       "git add"
     ]
   },
@@ -30,7 +31,7 @@
     "dist"
   ],
   "keywords": [
-    ""
+    "fizzbuzz"
   ],
   "devDependencies": {
     "@babel/cli": "7.8.4",
@@ -39,11 +40,11 @@
     "@babel/preset-flow": "7.8.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.9.0",
-    "eslint": "6.8.0",
-    "eslint-config-precure": "5.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-nzap": "^1.4.6",
     "husky": "3.1.0",
     "jest": "24.9.0",
     "lint-staged": "9.5.0",
-    "prettier": "1.19.1"
+    "typescript": "^3.8.2"
   }
 }
