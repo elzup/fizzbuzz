@@ -16,11 +16,9 @@
     "prepack:flow": "flow-copy-source src dist",
     "precommit": "yarn flow && lint-staged",
     "fmt": "prettier --write '**/*.{js,json,md}'",
-    "flow": "flow",
     "lint": "eslint .",
     "test": "jest src",
     "test:cov": "jest src --coverage --ci --runInBand",
-    "test:ci": "yarn flow && yarn lint && yarn test:cov"
   },
   "lint-staged": {
     "*.{js,json,md}": [
@@ -43,7 +41,6 @@
     "babel-jest": "24.9.0",
     "eslint": "6.8.0",
     "eslint-config-precure": "5.2.0",
-    "flow-copy-source": "2.0.9",
     "husky": "3.1.0",
     "jest": "24.9.0",
     "lint-staged": "9.5.0",
