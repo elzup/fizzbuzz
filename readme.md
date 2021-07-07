@@ -18,24 +18,24 @@ $ npm install @elzup/fizzbuzz
 const fizzbuzz = require('fizzbuzz')
 const fb = fizzbuzz()
 fb.take(5)
-// [ '1', '2', 'Fizz', '4', 'Buzz' ]
+// [ 1, 2, 'Fizz', 4, 'Buzz' ]
 
 fb.from(3)
   .to(10)
   .take()
-// [ 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz' ]
+// [ 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz' ]
 
 const t = fb.it()
 t.next().value
-// '1'
+// 1
 t.next().value
-// '2'
+// 2
 
 fb.rules([{ name: 'test', n: 3 }]).take(5)
-// [ '1', '2', 'test', '4', '5' ]
+// [ 1, 2, 'test', 4, 5 ]
 
 fb.addRule({ name: 'hey', n: 2 }).take(6)
-// [ '1', 'hey', 'Fizz', 'hey', 'Buzz', 'Fizzhey' ]
+// [ 1, 'hey', 'Fizz', 'hey', 'Buzz', 'Fizzhey' ]
 ```
 
 ## API
@@ -57,7 +57,3 @@ type FizzBuzz = {
 ## License
 
 MIT © [elzup](https://elzup.com)
-
-```
-
-```
