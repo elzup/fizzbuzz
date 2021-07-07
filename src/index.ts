@@ -26,18 +26,16 @@ type Params = {
 
 type Arguments = number | OptionArguments
 
-type MakeIterator = (
-  to?: number,
-  from?: number
-) => Generator<string, void, string>
-type FizzBuzz = {
-  from: (to: number) => FizzBuzz
-  to: (to: number) => FizzBuzz
-  rules: (rules: Rule[]) => FizzBuzz
-  addRule: (rule: Rule) => FizzBuzz
-  take: (to?: number, from?: number) => string[]
-  at: (n: number) => string
-  it: MakeIterator
+type MakeIterator<T> = (to?: number, from?: number) => Generator<T, void, T>
+
+type FizzBuzz<T = string | number> = {
+  from: (to: number) => FizzBuzz<T>
+  to: (to: number) => FizzBuzz<T>
+  rules: (rules: Rule[]) => FizzBuzz<T>
+  addRule: (rule: Rule) => FizzBuzz<T>
+  take: (to?: number, from?: number) => T[]
+  at: (n: number) => T
+  it: MakeIterator<T>
 }
 
 const basicRules: Rule[] = [
@@ -68,28 +66,24 @@ const convertComp = (rule: Rule): RuleComp => {
   }
 }
 
-type CalcFunc = (n: number) => string
+type CalcFunc<T = string | number> = (n: number) => T
 
 const genAt = (compRules: RuleComp[]): CalcFunc => {
   return (n: number) => {
     const hitRules = compRules.filter(r => r.check(n))
 
-    if (hitRules.length === 0) {
-      return `${n}`
-    }
+    if (hitRules.length === 0) return n
+
     return hitRules.map(v => v.name).join('')
   }
 }
 
-const genGenIt = (
-  calc: CalcFunc,
+const genGenIt = <T>(
+  calc: CalcFunc<T>,
   defaultTo: number,
   defaultFrom: number
-): MakeIterator => {
-  return (
-    to: number = defaultTo,
-    from: number = defaultFrom
-  ): Generator<string, void, string> =>
+): MakeIterator<T> => {
+  return (to: number = defaultTo, from: number = defaultFrom) =>
     (function*() {
       for (let i = from; i <= to; i++) {
         yield calc(i)
