@@ -1,3 +1,5 @@
+type Mutable<T> = { -readonly [P in keyof T]: T[P] }
+
 type RuleDiv = {
   readonly n: number
   readonly name: string
@@ -11,24 +13,23 @@ type RuleComp = {
 }
 
 type Rule = RuleDiv | RuleComp
+type PackFunc<T> = (n: number, hitRules: Rule[]) => T
 
-type OptionArguments = {
-  to?: number
-  from?: number
-  rules?: Rule[]
-}
-
-type Params = {
+type Params<T> = {
   readonly to: number
   readonly from: number
   readonly rules: Rule[]
+  readonly packFunc: PackFunc<T>
 }
+type OptionArguments<T> = Partial<Params<T>>
 
-type Arguments = number | OptionArguments
-
+type Arguments<T> = number | OptionArguments<T>
 type MakeIterator<T> = (to?: number, from?: number) => Generator<T, void, T>
 
-type FizzBuzz<T = string | number> = {
+const defaultPackFunc: PackFunc<number | string> = (n, hitRules) =>
+  hitRules.length === 0 ? n : hitRules.map(v => v.name).join('')
+
+type FizzBuzz<T> = {
   from: (to: number) => FizzBuzz<T>
   to: (to: number) => FizzBuzz<T>
   rules: (rules: Rule[]) => FizzBuzz<T>
@@ -43,13 +44,21 @@ const basicRules: Rule[] = [
   { n: 5, name: 'Buzz' },
 ]
 
-const defaultArgumants: Params = {
+type DefaultPackFuncReturn = ReturnType<typeof defaultPackFunc>
+const defaultArgumants: Params<DefaultPackFuncReturn> = {
   to: 30,
   from: 1,
   rules: basicRules,
+  packFunc: defaultPackFunc,
 }
 
-const normalizeParams = (arg?: Arguments): Params => {
+type PackFuncReturn<T> = T extends OptionArguments<infer U>
+  ? U
+  : DefaultPackFuncReturn
+
+const normalizeParams = <T>(
+  arg: Arguments<T>
+): Params<PackFuncReturn<Arguments<T>>> => {
   if (!arg) return defaultArgumants
   if (typeof arg === 'number') {
     return Object.assign({}, defaultArgumants, { to: arg })
@@ -66,16 +75,17 @@ const convertComp = (rule: Rule): RuleComp => {
   }
 }
 
-type CalcFunc<T = string | number> = (n: number) => T
+type CalcFunc<T> = (n: number) => T
 
-const genAt = (compRules: RuleComp[]): CalcFunc => {
-  return (n: number) => {
-    const hitRules = compRules.filter(r => r.check(n))
-
-    if (hitRules.length === 0) return n
-
-    return hitRules.map(v => v.name).join('')
-  }
+const genAt = <T>(
+  compRules: RuleComp[],
+  packFunc: PackFunc<T>
+): CalcFunc<T> => {
+  return (n: number) =>
+    packFunc(
+      n,
+      compRules.filter(r => r.check(n))
+    )
 }
 
 const genGenIt = <T>(
@@ -91,10 +101,12 @@ const genGenIt = <T>(
     })()
 }
 
-const fizzbuzz = (arg?: Arguments): FizzBuzz => {
+const fizzbuzz = <T>(
+  arg?: Arguments<T>
+): FizzBuzz<PackFuncReturn<Arguments<T>>> => {
   const params = normalizeParams(arg)
   const compRules = params.rules.map(convertComp)
-  const at = genAt(compRules)
+  const at = genAt(compRules, params.packFunc)
   const genIt = genGenIt(at, params.to, params.from)
 
   return {
