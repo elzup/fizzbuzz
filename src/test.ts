@@ -58,12 +58,7 @@ test('chain', () => {
       "Buzz",
     ]
   `)
-  expect(
-    fb
-      .from(3)
-      .to(8)
-      .take()
-  ).toMatchInlineSnapshot(`
+  expect(fb.from(3).to(8).take()).toMatchInlineSnapshot(`
     Array [
       "Fizz",
       4,
@@ -145,24 +140,24 @@ test('custom func', () => {
   const fb = fizzbuzz({
     rules: [
       { name: 'KYOKO', n: 2 },
-      { name: '_toshino_', check: v => v === 5 },
+      { name: '_toshino_', check: (v) => v === 5 },
     ],
   })
 
   expect(fb.take(10)).toMatchInlineSnapshot(`
-Array [
-  1,
-  "KYOKO",
-  3,
-  "KYOKO",
-  "_toshino_",
-  "KYOKO",
-  7,
-  "KYOKO",
-  9,
-  "KYOKO",
-]
-`)
+    Array [
+      1,
+      "KYOKO",
+      3,
+      "KYOKO",
+      "_toshino_",
+      "KYOKO",
+      7,
+      "KYOKO",
+      9,
+      "KYOKO",
+    ]
+  `)
 })
 
 test('it', () => {
@@ -176,24 +171,78 @@ test('it', () => {
     t.next().value,
     t.next().value,
   ]).toMatchInlineSnapshot(`
-Array [
-  1,
-  2,
-  "Fizz",
-  4,
-  "Buzz",
-]
-`)
+    Array [
+      1,
+      2,
+      "Fizz",
+      4,
+      "Buzz",
+    ]
+  `)
   const t10 = m.it(10, 5)
 
   expect([...t10]).toMatchInlineSnapshot(`
-Array [
-  "Buzz",
-  "Fizz",
-  7,
-  8,
-  "Fizz",
-  "Buzz",
-]
-`)
+    Array [
+      "Buzz",
+      "Fizz",
+      7,
+      8,
+      "Fizz",
+      "Buzz",
+    ]
+  `)
+})
+
+test('packFunc', () => {
+  expect(
+    fizzbuzz({
+      rules: [
+        { name: 'x2', n: 2 },
+        { name: 'x3', n: 3 },
+      ],
+      packFunc: (v, rules) => {
+        // only 1 rule hit filter and return always string
+        if (rules.length === 1) {
+          return rules[0].name
+        }
+        return `_${v}`
+      },
+    }).take(12)
+  ).toMatchInlineSnapshot(`
+    Array [
+      "_1",
+      "x2",
+      "x3",
+      "x2",
+      "_5",
+      "_6",
+      "_7",
+      "x2",
+      "x3",
+      "x2",
+      "_11",
+      "_12",
+    ]
+  `)
+  const fb123 = fizzbuzz({
+    rules: [
+      { name: 'a', n: 1 },
+      { name: 'b', n: 2 },
+      { name: 'c', n: 3 },
+    ],
+    packFunc: (v, rules) => rules.length,
+  })
+
+  expect(fb123.take(8)).toMatchInlineSnapshot(`
+    Array [
+      1,
+      2,
+      2,
+      2,
+      1,
+      3,
+      1,
+      2,
+    ]
+  `)
 })
