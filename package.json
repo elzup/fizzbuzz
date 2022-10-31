@@ -36,7 +36,7 @@
   ],
   "devDependencies": {
     "@types/jest": "27.5.2",
-    "@types/node": "16.11.62",
+    "@types/node": "16.18.3",
     "babel-jest": "27.5.1",
     "eslint": "8.24.0",
     "eslint-config-nzap": "4.4.0",
