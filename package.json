@@ -38,7 +38,7 @@
     "@types/jest": "27.5.2",
     "@types/node": "16.18.3",
     "babel-jest": "27.5.1",
-    "eslint": "8.26.0",
+    "eslint": "8.28.0",
     "eslint-config-nzap": "4.4.0",
     "husky": "7.0.4",
     "jest": "27.5.1",
