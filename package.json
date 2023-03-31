@@ -35,8 +35,8 @@
     "fizzbuzz"
   ],
   "devDependencies": {
-    "@types/jest": "27.5.2",
-    "@types/node": "16.18.23",
+    "@types/jest": "29.5.0",
+    "@types/node": "18.15.11",
     "babel-jest": "27.5.1",
     "eslint": "8.37.0",
     "eslint-config-nzap": "4.4.0",
