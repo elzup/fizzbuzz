@@ -4,7 +4,7 @@ test('take', () => {
   const fb = fizzbuzz()
 
   expect(fb.take(15)).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
       "Fizz",
@@ -23,7 +23,7 @@ test('take', () => {
     ]
   `)
   expect(fb.take(10, 5)).toMatchInlineSnapshot(`
-    Array [
+    [
       "Buzz",
       "Fizz",
       7,
@@ -38,7 +38,7 @@ test('chain', () => {
   const fb = fizzbuzz(10)
 
   expect(fb.to(5).take()).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
       "Fizz",
@@ -47,7 +47,7 @@ test('chain', () => {
     ]
   `)
   expect(fb.from(3).take()).toMatchInlineSnapshot(`
-    Array [
+    [
       "Fizz",
       4,
       "Buzz",
@@ -59,7 +59,7 @@ test('chain', () => {
     ]
   `)
   expect(fb.from(3).to(8).take()).toMatchInlineSnapshot(`
-    Array [
+    [
       "Fizz",
       4,
       "Buzz",
@@ -69,7 +69,7 @@ test('chain', () => {
     ]
   `)
   expect(fb.rules([{ name: 'test', n: 3 }]).take(5)).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
       "test",
@@ -90,7 +90,7 @@ test('at', () => {
 
 test('argument', () => {
   expect(fizzbuzz().take(5)).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
       "Fizz",
@@ -99,7 +99,7 @@ test('argument', () => {
     ]
   `)
   expect(fizzbuzz(5).take()).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
       "Fizz",
@@ -108,13 +108,13 @@ test('argument', () => {
     ]
   `)
   expect(fizzbuzz(5).take(2)).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
     ]
   `)
   expect(fizzbuzz({ to: 3, from: 2, rules: [] }).take()).toMatchInlineSnapshot(`
-    Array [
+    [
       2,
       3,
     ]
@@ -125,7 +125,7 @@ test('addRule', () => {
   const fb = fizzbuzz(10).addRule({ name: 'hey', n: 2 })
 
   expect(fb.take(6)).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       "hey",
       "Fizz",
@@ -145,7 +145,7 @@ test('custom func', () => {
   })
 
   expect(fb.take(10)).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       "KYOKO",
       3,
@@ -171,7 +171,7 @@ test('it', () => {
     t.next().value,
     t.next().value,
   ]).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
       "Fizz",
@@ -182,7 +182,7 @@ test('it', () => {
   const t10 = m.it(10, 5)
 
   expect([...t10]).toMatchInlineSnapshot(`
-    Array [
+    [
       "Buzz",
       "Fizz",
       7,
@@ -200,6 +200,7 @@ test('packFunc', () => {
         { name: 'x2', n: 2 },
         { name: 'x3', n: 3 },
       ],
+
       packFunc: (v, rules) => {
         // only 1 rule hit filter and return always string
         if (rules.length === 1) {
@@ -209,7 +210,7 @@ test('packFunc', () => {
       },
     }).take(12)
   ).toMatchInlineSnapshot(`
-    Array [
+    [
       "_1",
       "x2",
       "x3",
@@ -234,7 +235,7 @@ test('packFunc', () => {
   })
 
   expect(fb123.take(8)).toMatchInlineSnapshot(`
-    Array [
+    [
       1,
       2,
       2,
