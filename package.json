@@ -14,8 +14,8 @@
     "build": "tsc",
     "deploy": "npm run build && yarn publish",
     "lint": "eslint --ext .ts,.tsx",
-    "test": "jest src",
-    "test:cov": "jest src --coverage --ci --runInBand",
+    "test": "jest src --no-watchman",
+    "test:cov": "jest src --no-watchman --coverage --ci --runInBand",
     "prepare": "husky install"
   },
   "husky": {
