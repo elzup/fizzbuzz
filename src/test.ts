@@ -34,6 +34,14 @@ test('take', () => {
   `)
 })
 
+test('take and it use inclusive ranges', () => {
+  const fb = fizzbuzz()
+
+  expect(fb.take(3, 3)).toEqual(['Fizz'])
+  expect(fb.take(2, 3)).toEqual([])
+  expect([...fb.it(2, 3)]).toEqual([])
+})
+
 test('chain', () => {
   const fb = fizzbuzz(10)
 
@@ -77,6 +85,16 @@ test('chain', () => {
       5,
     ]
   `)
+})
+
+test('chain methods do not mutate the base instance', () => {
+  const fb = fizzbuzz(5)
+  const fromThree = fb.from(3)
+  const withExtraRule = fb.addRule({ name: 'Hey', n: 2 })
+
+  expect(fb.take()).toEqual([1, 2, 'Fizz', 4, 'Buzz'])
+  expect(fromThree.take()).toEqual(['Fizz', 4, 'Buzz'])
+  expect(withExtraRule.take()).toEqual([1, 'Hey', 'Fizz', 'Hey', 'Buzz'])
 })
 
 test('at', () => {
@@ -134,6 +152,17 @@ test('addRule', () => {
       "Fizzhey",
     ]
   `)
+})
+
+test('divisor rule with zero does not match any value', () => {
+  const fb = fizzbuzz({
+    rules: [
+      { name: 'never', n: 0 },
+      { name: 'even', n: 2 },
+    ],
+  })
+
+  expect(fb.take(4)).toEqual([1, 'even', 3, 'even'])
 })
 
 test('custom func', () => {
